@@ -10,7 +10,7 @@ from utils.misc import listget
 
 def extract_data_gateway(args):
     from extraction import data_extractor
-    data_extractor.extract_data(args)
+    data_extractor.extract_data_argparse(args)
 
 
 parser = argparse.ArgumentParser()
@@ -18,7 +18,7 @@ subparsers = parser.add_subparsers()
 
 # add subparser for onto_creator
 p_extract_data = subparsers.add_parser('extract_data')
-p_extract_data.add_argument('-p', '--path', dest='path')
+p_extract_data.add_argument('-p', '--path', dest='path', default=TENSORFLOW_PATH)
 p_extract_data.set_defaults(func=extract_data_gateway)
 
 

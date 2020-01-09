@@ -5,7 +5,7 @@ Knowledge Analysis and Management 2019 - Bad Smells
 by Gustavo Graziani
 
 Commands:
-{onto_creator}
+{extract_data}
 
 
 TO SEE DETAILS ON EACH COMMAND, RUN
