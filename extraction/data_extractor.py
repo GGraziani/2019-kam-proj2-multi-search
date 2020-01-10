@@ -21,13 +21,18 @@ def extract_data(file_path):
     clang_extractor = ClangExtractor(clang_files)
     print(clang_extractor)
 
-    py_extractor.get_df().append(clang_extractor.get_df()).to_csv(EXTRACTED_DATA_PATH,index=False)
+    save_to_csv(py_extractor.get_df().append(clang_extractor.get_df()))
 
     print('\n> Extracted data saved to file "%s"' % os.path.relpath(EXTRACTED_DATA_PATH, PROJ_ROOT))
 
 
 def collect_files(file):
     py_files.append(file) if file.endswith('.py') else clang_files.append(file)
+
+
+def save_to_csv(df):
+    df.columns = ["Name", "File", "Path", "Type"]
+    df.to_csv(EXTRACTED_DATA_PATH, index=False)
 
 
 def extract_data_argparse(args):
