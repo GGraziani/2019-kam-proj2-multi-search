@@ -13,13 +13,23 @@ def extract_data_gateway(args):
     data_extractor.extract_data_argparse(args)
 
 
+def search_data_gateway(args):
+    from training import search_data
+    search_data.search_data_argparse(args)
+
+
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
-# add subparser for onto_creator
+# add subparser for extract_data
 p_extract_data = subparsers.add_parser('extract_data')
 p_extract_data.add_argument('-p', '--path', dest='path', default=TENSORFLOW_PATH)
 p_extract_data.set_defaults(func=extract_data_gateway)
+
+# add subparser for search_data
+p_search_data = subparsers.add_parser('search_data')
+p_search_data.add_argument('-d', '--data', dest='data', default=EXTRACTED_DATA_PATH)
+p_search_data.set_defaults(func=search_data_gateway)
 
 
 def main(argv):
