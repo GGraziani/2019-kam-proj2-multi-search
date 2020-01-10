@@ -22,16 +22,16 @@ class Extractor(object):
     def _get_data(self, f_path):
         raise Exception("Not Implemented")
 
-    def _add_entity(self, name, path, line):
-        self._row_list.append([name, path, line])
+    def _add_entity(self, name, path, line, type):
+        self._row_list.append([name, path, line, type])
 
     def get_df(self):
         return pd.DataFrame(self._row_list)
 
     def __str__(self):
-        return '\n\t- functions: ' + str(self._functions) + \
-               '\n\t- classes: ' + str(self._classes) + \
-               '\n\t- methods: ' + str(self._methods) + \
+        return '\n\t- Functions: ' + str(self._functions) + \
+               '\n\t- Classes: ' + str(self._classes) + \
+               '\n\t- Methods: ' + str(self._methods) + \
                '\n\t- Total entities: ' + str(self._functions + self._classes + self._methods)
 
 
@@ -45,16 +45,16 @@ class PyExtractor(Extractor):
 
         m_count = 0
         for entity in entities:
-            self._add_entity(entity.name, f_path, entity.lineno)
-
             if isinstance(entity, ast.ClassDef):
+                self._add_entity(entity.name, f_path, entity.lineno, 'class')
                 self._classes += 1
                 methods = [m for m in entity.body if isinstance(m, ast.FunctionDef)]
 
                 for method in methods:
-                    self._add_entity(method.name, f_path, method.lineno)
+                    self._add_entity(method.name, f_path, method.lineno, 'method')
                     m_count += 1
             else:
+                self._add_entity(entity.name, f_path, entity.lineno, 'function')
                 self._functions += 1
         self._methods += m_count
 
@@ -79,13 +79,13 @@ class ClangExtractor(Extractor):
     def _walk(self, node, f_path):
         if node.is_definition():
             if node.kind == CursorKind.CLASS_DECL:
-                self._add_entity(node.spelling, f_path, node.location.line)
+                self._add_entity(node.spelling, f_path, node.location.line, 'class')
                 self._classes += 1
             elif node.kind == CursorKind.CXX_METHOD:
-                self._add_entity(node.spelling, f_path, node.location.line)
+                self._add_entity(node.spelling, f_path, node.location.line, 'method')
                 self._methods += 1
             elif node.kind == CursorKind.FUNCTION_DECL:
-                self._add_entity(node.spelling, f_path, node.location.line)
+                self._add_entity(node.spelling, f_path, node.location.line, 'function')
                 self._functions += 1
 
         self._get_data_helper(node, f_path)
