@@ -1,6 +1,7 @@
 import os
 import sys
 
+from definitions import EXTRACTED_DATA_PATH, PROJ_ROOT
 from extraction.extractor import PyExtractor, ClangExtractor
 from utils.misc import traverse
 
@@ -19,6 +20,10 @@ def extract_data(file_path):
 
     clang_extractor = ClangExtractor(clang_files)
     print(clang_extractor)
+
+    py_extractor.get_df().append(clang_extractor.get_df()).to_csv(EXTRACTED_DATA_PATH,index=False)
+
+    print('\n> Extracted data saved to file "%s"' % os.path.relpath(EXTRACTED_DATA_PATH, PROJ_ROOT))
 
 
 def collect_files(file):

@@ -21,8 +21,8 @@ extract_data:
         $ python3 multi_search.py extract_data
 
     flags:
-    -s <path-to-file> | --source <path-to-file>:
-        The path to the "tree.py" file. Default is "PROJ_ROOT/lib/tree.py"
+    -s <path-to-source> | --source <path-to-source>:
+        The path to the source code to analyse. Default is "PROJ_ROOT/lib/tensorflow"
 '''
 }
 
