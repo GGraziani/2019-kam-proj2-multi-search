@@ -1,6 +1,12 @@
 import ast
-
 import pandas as pd
+
+import clang
+import clang.cindex
+from clang.cindex import *
+
+
+clang.cindex.Config.set_library_path("/usr/local/Cellar/llvm/9.0.0_1/lib/")
 
 
 class Extractor(object):
@@ -25,7 +31,8 @@ class Extractor(object):
     def __str__(self):
         return '\n\t- functions: ' + str(self._functions) + \
                '\n\t- classes: ' + str(self._classes) + \
-               '\n\t- methods: ' + str(self._methods)
+               '\n\t- methods: ' + str(self._methods) + \
+               '\n\t- Total entities: ' + str(self._functions + self._classes + self._methods)
 
 
 class PyExtractor(Extractor):
@@ -53,5 +60,36 @@ class PyExtractor(Extractor):
 
     def __str__(self):
         stats = super().__str__()
-        return '\tPython extractor found:' + stats
+        return '\n\tPython extractor found:' + stats
 
+
+class ClangExtractor(Extractor):
+    def __init__(self, files):
+        self.index = clang.cindex.Index.create()
+        super().__init__(files)
+
+    def _get_data(self, f_path):
+        cursor = self.index.parse(f_path, ["c++"]).cursor
+        self._get_data_helper(cursor, f_path)
+
+    def _get_data_helper(self, cursor, f_path):
+        for i in cursor.get_children():
+            self._walk(i, f_path)
+
+    def _walk(self, node, f_path):
+        if node.is_definition():
+            if node.kind == CursorKind.CLASS_DECL:
+                self._add_entity(node.spelling, f_path, node.location.line)
+                self._classes += 1
+            elif node.kind == CursorKind.CXX_METHOD:
+                self._add_entity(node.spelling, f_path, node.location.line)
+                self._methods += 1
+            elif node.kind == CursorKind.FUNCTION_DECL:
+                self._add_entity(node.spelling, f_path, node.location.line)
+                self._functions += 1
+
+        self._get_data_helper(node, f_path)
+
+    def __str__(self):
+        stats = super().__str__()
+        return '\n\tClang extractor found:' + stats
