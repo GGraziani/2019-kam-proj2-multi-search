@@ -9,10 +9,10 @@ class SearchEngine:
         self.corpus = Corpus(df=data)
 
 
-
 class Corpus:
     def __init__(self, df):
         self.words = self._process_names(df)
+        self._train()
 
     def _process_names(self, df):
 
@@ -36,5 +36,14 @@ class Corpus:
                     words = words[0].split("_")
 
         return [word.lower() for word in words if word != '' and word not in STOPWORDS]
+
+    def _train(self):
+        self._freq_train()
+
+    def _freq_train(self):
+        self.freq_dict = corpora.Dictionary(self.words)
+        bow_list = [self.freq_dict.doc2bow(text) for text in self.words]
+        self.freq_index = similarities.SparseMatrixSimilarity(bow_list, num_features=len(self.freq_dict))
+
 
 
