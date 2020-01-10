@@ -3,9 +3,11 @@ import sys
 
 import pandas as pd
 
+from training.search_engine import SearchEngine
+
 
 def search_data(data):
-    print(data)
+    search_engine = SearchEngine(data)
 
 
 def search_data_argparse(args):
