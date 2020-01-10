@@ -1,7 +1,7 @@
 import os
 import sys
 
-from extraction.extractor import PyExtractor
+from extraction.extractor import PyExtractor, ClangExtractor
 from utils.misc import traverse
 
 py_files = []
@@ -16,6 +16,9 @@ def extract_data(file_path):
 
     py_extractor = PyExtractor(py_files)
     print(py_extractor)
+
+    clang_extractor = ClangExtractor(clang_files)
+    print(clang_extractor)
 
 
 def collect_files(file):
