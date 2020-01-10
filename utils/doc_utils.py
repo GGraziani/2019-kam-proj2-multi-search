@@ -10,7 +10,7 @@ Commands:
 
 
 TO SEE DETAILS ON EACH COMMAND, RUN
-> python3 bad_smells.py <command>
+> python3 bad_smells.py <command> -h/--help
 '''
 
 MODULE_DOCSTRINGS = {
@@ -19,7 +19,7 @@ extract_data:
      Extract names of Python and C++ classes, methods, functions.
 
     Example usage:
-        $ python3 multi_search.py extract_data
+        $ python3 multi_search.py extract_data --source lib/tensorflow
 
     flags:
     -s <path-to-source> | --source <path-to-source>:
