@@ -1,7 +1,10 @@
 from re import finditer
 
+import gensim
 from gensim.parsing.preprocessing import STOPWORDS
-from gensim import corpora, similarities
+from gensim import corpora, similarities, models
+
+from utils.misc import get_not_unique_words, w_2_tagged_doc
 
 
 class SearchEngine:
@@ -41,9 +44,7 @@ class Corpus:
         self._freq_train()
 
     def _freq_train(self):
-        self.freq_dict = corpora.Dictionary(self.words)
-        bow_list = [self.freq_dict.doc2bow(text) for text in self.words]
-        self.freq_index = similarities.SparseMatrixSimilarity(bow_list, num_features=len(self.freq_dict))
-
-
+        self._freq_dict = corpora.Dictionary(self.words)
+        bow_list = [self._freq_dict.doc2bow(text) for text in self.words]
+        self._freq_index = similarities.SparseMatrixSimilarity(bow_list, num_features=len(self._freq_dict))
 
