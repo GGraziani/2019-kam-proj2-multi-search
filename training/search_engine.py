@@ -14,6 +14,9 @@ class SearchEngine:
         results = {}
         words = query.lower().split()
 
+        results['freq'] = self.corpus.freq(words)
+        results['tf-idf'] = self.corpus.tf_idf(words)
+
 
 class Corpus:
     def __init__(self, df):
@@ -85,5 +88,11 @@ class Corpus:
     def freq(self, words):
         bow = self._freq_dict.doc2bow(words)
         similarity = self._freq_index[bow]
+
+        return get_top_five(self._df, similarity)
+
+    def tf_idf(self, word):
+        bow = self._tf_idf_dict.doc2bow(word)
+        similarity = self._tf_idf_index[self._tf_idf_model[bow]]
 
         return get_top_five(self._df, similarity)
