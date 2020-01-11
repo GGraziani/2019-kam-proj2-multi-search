@@ -44,6 +44,7 @@ class Corpus:
         self._freq_train()
         self._tf_idf_train()
         self._lsi_train()
+        self._doc2v_train()
 
     def _freq_train(self):
         self._freq_dict = corpora.Dictionary(self.words)
@@ -70,3 +71,13 @@ class Corpus:
 
         self._lsi_model = models.LsiModel(tf_idf_corpus, id2word=self._lsi_dict, num_topics=200)
         self._lsi_index = similarities.MatrixSimilarity(self._lsi_model[bow_list])
+
+    def _doc2v_train(self):
+        not_unique_words = get_not_unique_words(self.words)
+
+        self._tagged_docs = list(w_2_tagged_doc(not_unique_words))
+
+        self._d2v_model = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=20)
+        self._d2v_model.build_vocab(self._tagged_docs)
+        self._d2v_model.train(self._tagged_docs, total_examples=self._d2v_model.corpus_count,
+                              epochs=self._d2v_model.epochs)
