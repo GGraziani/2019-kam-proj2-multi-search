@@ -43,6 +43,7 @@ class Corpus:
     def _train(self):
         self._freq_train()
         self._tf_idf_train()
+        self._lsi_train()
 
     def _freq_train(self):
         self._freq_dict = corpora.Dictionary(self.words)
@@ -57,3 +58,15 @@ class Corpus:
         self._tf_idf_index = similarities.SparseMatrixSimilarity(
             self._tf_idf_model[bow_list],
             num_features=len(self._tf_idf_dict))
+
+    def _lsi_train(self):
+        not_unique_words = get_not_unique_words(self.words)
+
+        self._lsi_dict = corpora.Dictionary(not_unique_words)
+        bow_list = [self._lsi_dict.doc2bow(text) for text in not_unique_words]
+
+        tf_idf_model = models.TfidfModel(bow_list)
+        tf_idf_corpus = tf_idf_model[bow_list]
+
+        self._lsi_model = models.LsiModel(tf_idf_corpus, id2word=self._lsi_dict, num_topics=200)
+        self._lsi_index = similarities.MatrixSimilarity(self._lsi_model[bow_list])
