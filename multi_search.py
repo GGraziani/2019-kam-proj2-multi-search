@@ -29,6 +29,8 @@ p_extract_data.set_defaults(func=extract_data_gateway)
 # add subparser for search_data
 p_search_data = subparsers.add_parser('search_data')
 p_search_data.add_argument('-d', '--data', dest='data', default=EXTRACTED_DATA_PATH)
+p_search_data.add_argument('-q', '--query', dest='query', default='Optimizer that implements '
+                                                                  'the Adadelta algorithm')
 p_search_data.set_defaults(func=search_data_gateway)
 
 

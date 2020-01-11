@@ -6,8 +6,9 @@ import pandas as pd
 from training.search_engine import SearchEngine
 
 
-def search_data(data):
+def search_data(data, query):
     search_engine = SearchEngine(data)
+    search_engine.query(query)
 
 
 def search_data_argparse(args):
@@ -15,4 +16,4 @@ def search_data_argparse(args):
         print('"%s" is not a valid path, please enter a path to your "data.csv"...' % args.path)
         sys.exit(0)
 
-    search_data(data=pd.read_csv(args.data, header=None))
+    search_data(data=pd.read_csv(args.data), query=args.query)
