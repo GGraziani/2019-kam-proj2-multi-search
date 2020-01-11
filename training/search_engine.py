@@ -16,6 +16,8 @@ class SearchEngine:
 
         results['freq'] = self.corpus.freq(words)
         results['tf-idf'] = self.corpus.tf_idf(words)
+        results['lsi'] = self.corpus.lsi(words)
+        results['doc2v'] = self.corpus.doc2v(words)
 
 
 class Corpus:
@@ -41,7 +43,7 @@ class Corpus:
         self._freq_train()
         self._tf_idf_train()
         self._lsi_train()
-        # self._doc2v_train()
+        self._doc2v_train()
 
     def _freq_train(self):
         print('\t\t 1. Frequency training...', end='')
@@ -91,8 +93,24 @@ class Corpus:
 
         return get_top_five(self._df, similarity)
 
-    def tf_idf(self, word):
-        bow = self._tf_idf_dict.doc2bow(word)
+    def tf_idf(self, words):
+        bow = self._tf_idf_dict.doc2bow(words)
         similarity = self._tf_idf_index[self._tf_idf_model[bow]]
 
         return get_top_five(self._df, similarity)
+
+    def lsi(self, words):
+        bow = self._lsi_dict.doc2bow(words)
+        similarity = self._lsi_index[self._lsi_model[bow]]
+
+        return get_top_five(self._df, similarity)
+
+    def doc2v(self, words):
+        vector = self._d2v_model.infer_vector(words)
+        top_most_similar = self._d2v_model.docvecs.most_similar([vector], topn=5)
+
+        top_five = []
+        for label, index in [('FIRST', 0), ('SECOND', 1), ('THIRD', 2), ('FOURTH', 3), ('FIFTH', 4)]:
+            top_five.append(self._df.iloc[top_most_similar[index][0]].values.tolist())
+        return top_five
+
