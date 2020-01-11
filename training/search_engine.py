@@ -42,9 +42,18 @@ class Corpus:
 
     def _train(self):
         self._freq_train()
+        self._tf_idf_train()
 
     def _freq_train(self):
         self._freq_dict = corpora.Dictionary(self.words)
         bow_list = [self._freq_dict.doc2bow(text) for text in self.words]
         self._freq_index = similarities.SparseMatrixSimilarity(bow_list, num_features=len(self._freq_dict))
 
+    def _tf_idf_train(self):
+        self._tf_idf_dict = corpora.Dictionary(self.words)
+        bow_list = [self._tf_idf_dict.doc2bow(text) for text in self.words]
+
+        self._tf_idf_model = models.TfidfModel(bow_list)
+        self._tf_idf_index = similarities.SparseMatrixSimilarity(
+            self._tf_idf_model[bow_list],
+            num_features=len(self._tf_idf_dict))
