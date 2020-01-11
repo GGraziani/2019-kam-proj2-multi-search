@@ -3,7 +3,7 @@ import argparse
 
 from definitions import *
 from utils.doc_utils import *
-from utils.misc import listget
+from utils.misc import list_get
 
 
 # add one gateway function for each functionality
@@ -35,7 +35,7 @@ p_search_data.set_defaults(func=search_data_gateway)
 def main(argv):
     helpstrings = {'-h', '--help'}
 
-    command = listget(argv, 0, '').lower()
+    command = list_get(argv, 0, '').lower()
 
     # The user did not enter a command, or the entered command is not recognized.
     if command not in MODULE_DOCSTRINGS:
@@ -47,7 +47,7 @@ def main(argv):
         return 1
 
     # The user entered a command, but no further arguments, or just help.
-    argument = listget(argv, 1, '').lower()
+    argument = list_get(argv, 1, '').lower()
     if argument in helpstrings:
         print(MODULE_DOCSTRINGS[command])
         return 1
