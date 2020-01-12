@@ -79,8 +79,9 @@ class ClangExtractor(Extractor):
     def _walk(self, node, f_path):
         if node.is_definition():
             if node.kind == CursorKind.CLASS_DECL:
-                self._add_entity(node.spelling, f_path, node.location.line, 'class')
-                self._classes += 1
+                if str(node.spelling) != '':
+                    self._add_entity(node.spelling, f_path, node.location.line, 'class')
+                    self._classes += 1
             elif node.kind == CursorKind.CXX_METHOD:
                 self._add_entity(node.spelling, f_path, node.location.line, 'method')
                 self._methods += 1
