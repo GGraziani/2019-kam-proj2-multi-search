@@ -3,9 +3,14 @@ import sys
 
 import pandas as pd
 
+from evaluation.evaluator import Evaluator
+from training.search_engine import SearchEngine
+
 
 def prec_recall(data, gt):
-    print(gt)
+
+    search_engine = SearchEngine(data)
+    evaluator = Evaluator(search_engine, gt)
 
 
 def prec_recall_argparse(args):

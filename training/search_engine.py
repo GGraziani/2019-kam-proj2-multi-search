@@ -1,5 +1,6 @@
 import gensim
 from gensim import corpora, similarities, models
+import threading
 
 from utils.misc import get_not_unique_words, w_2_tagged_doc, split_name, get_top_five
 
@@ -21,19 +22,21 @@ class SearchEngine:
 
         self.print_query_results()
 
+        return self.query_results
+
     def print_query_results(self):
         if len(self.query_results) > 0:
 
-            print('\t\t 1. Freq results...')
+            print('\t 1. Freq results...')
             for res in self.query_results['freq']:
                 print('\t\t', res)
-            print('\t\t 2. Tf-idf results...')
+            print('\t 2. Tf-idf results...')
             for res in self.query_results['tf-idf']:
                 print('\t\t', res)
-            print('\t\t 3. LSI results...')
+            print('\t 3. LSI results...')
             for res in self.query_results['lsi']:
                 print('\t\t', res)
-            print('\t\t 4. Doc2V results...')
+            print('\t 4. Doc2V results...')
             for res in self.query_results['doc2v']:
                 print('\t\t', res)
 
