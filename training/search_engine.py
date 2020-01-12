@@ -1,6 +1,5 @@
 import gensim
 from gensim import corpora, similarities, models
-import threading
 
 from utils.misc import get_not_unique_words, w_2_tagged_doc, split_name, get_top_five
 
