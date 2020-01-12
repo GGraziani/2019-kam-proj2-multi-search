@@ -32,16 +32,18 @@ def traverse(path, regex, callback):
 
 
 def split_name(name):
-    words = []
-    if isinstance(name, str):  # ignore random "nan" values
-        matches = finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|.*_.*|$)', name)
+    if isinstance(name, str):
+        words = []
 
-        for match in matches:
-            words = [match.group(0)]
-            if words[0].__contains__('_'):
-                words = words[0].split("_")
-
-    return [word.lower() for word in words if word != '' and word not in STOPWORDS]
+        matches = finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', name)
+        no_camel = [m.group(0).lower() for m in matches]
+        no_snake = []
+        for word in no_camel:
+            no_snake.extend(word.split("_"))
+        for word in no_snake:
+            if word not in STOPWORDS and word != '':
+                words.append(word)
+        return words
 
 
 def get_not_unique_words(words):
