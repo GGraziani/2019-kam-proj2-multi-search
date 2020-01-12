@@ -37,6 +37,21 @@ search_data:
     -d <path-to-data> | --data <path-to-data>:
         The path to the csv file containing all the functions, classes and methods information. Default is 
         "PROJ_ROOT/res/data.csv".
+''',
+    'prec_recall': '''
+prec_recall:
+      Define the ground truth for a set of queries and measure average precision and recall for the four search 
+      engines.
+
+    Example usage:
+        $ python3 multi_search.py search_data --data res/data.csv --ground_truth res/gt.txt
+
+    flags:
+    -d <path-to-data> | --data <path-to-data>:
+        The path to the csv file containing all the functions, classes and methods information. Default is 
+        "PROJ_ROOT/res/data.csv".
+    -g <path-to-ground-truth> | --ground_truth <path-to-ground-truth>:
+        The path to the ground truth file. Default is "PROJ_ROOT/res/gt.txt".
 '''
 }
 
