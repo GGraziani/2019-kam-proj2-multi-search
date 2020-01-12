@@ -18,6 +18,11 @@ def search_data_gateway(args):
     search_data.search_data_argparse(args)
 
 
+def prec_recall_gateway(args):
+    from evaluation import prec_recall
+    prec_recall.prec_recall_argparse(args)
+
+
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
@@ -32,6 +37,12 @@ p_search_data.add_argument('-d', '--data', dest='data', default=EXTRACTED_DATA_P
 p_search_data.add_argument('-q', '--query', dest='query', default='Optimizer that implements '
                                                                   'the Adadelta algorithm')
 p_search_data.set_defaults(func=search_data_gateway)
+
+# add subparser for prec_recall
+p_prec_recall = subparsers.add_parser('prec_recall')
+p_prec_recall.add_argument('-d', '--data', dest='data', default=EXTRACTED_DATA_PATH)
+p_prec_recall.add_argument('-g', '--ground_truth', dest='gt', default=GROUND_TRUTH_PATH)
+p_prec_recall.set_defaults(func=prec_recall_gateway)
 
 
 def main(argv):
