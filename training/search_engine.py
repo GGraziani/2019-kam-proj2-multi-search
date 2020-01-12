@@ -42,16 +42,17 @@ class Corpus:
     def __init__(self, df):
         self._df = df
         self.words = self._process_names(self._df)
+
         self._train()
 
     def _process_names(self, df):
         print('\t- Processing filenames... ', end='')
 
+        all_names = self._df[self._df.columns[0]]
         processed_names = []
-
-        for name in df[df.columns[0]]:
+        for name in all_names:
             words = split_name(name)
-            if len(words) > 0:
+            if words is not None:
                 processed_names.append(words)
         print(' done. Processed %s filenames.' % len(processed_names))
         return processed_names
