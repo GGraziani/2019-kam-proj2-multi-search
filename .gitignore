@@ -132,3 +132,6 @@ dmypy.json
 .idea
 .DS_Store
 res/data.csv
+res/evaluation/avg_prec_recall.csv
+
+res/evaluation/precision.csv
