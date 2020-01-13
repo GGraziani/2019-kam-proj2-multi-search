@@ -3,7 +3,7 @@ import sys
 
 from definitions import EXTRACTED_DATA_PATH, PROJ_ROOT
 from extraction.extractor import PyExtractor, ClangExtractor
-from utils.misc import traverse
+from utils.misc import traverse, save_to_csv
 
 py_files = []
 clang_files = []
@@ -21,18 +21,16 @@ def extract_data(file_path):
     clang_extractor = ClangExtractor(clang_files)
     print(clang_extractor)
 
-    save_to_csv(py_extractor.get_df().append(clang_extractor.get_df()))
+    save_to_csv(
+        py_extractor.get_df().append(clang_extractor.get_df()),
+        EXTRACTED_DATA_PATH,
+        columns=["Name", "File", "Path", "Type"])
 
     print('\n> Extracted data saved to file "%s"' % os.path.relpath(EXTRACTED_DATA_PATH, PROJ_ROOT))
 
 
 def collect_files(file):
     py_files.append(file) if file.endswith('.py') else clang_files.append(file)
-
-
-def save_to_csv(df):
-    df.columns = ["Name", "File", "Path", "Type"]
-    df.to_csv(EXTRACTED_DATA_PATH, index=False)
 
 
 def extract_data_argparse(args):

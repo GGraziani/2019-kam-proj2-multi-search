@@ -1,5 +1,4 @@
 import os
-
 import pandas as pd
 
 from definitions import LIB_PATH

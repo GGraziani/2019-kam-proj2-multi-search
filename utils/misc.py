@@ -7,6 +7,8 @@ import gensim
 from gensim import models
 from gensim.parsing.preprocessing import STOPWORDS
 
+from definitions import EXTRACTED_DATA_PATH
+
 
 def indent(text, spaces=4):
     spaces = ' ' * spaces
@@ -18,6 +20,20 @@ def list_get(li, index, fallback=None):
         return li[index]
     except IndexError:
         return fallback
+
+
+def mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
+def save_to_csv(df, path, columns=None, index=False):
+    if columns is not None and len(columns) > 0:
+        df.columns = columns
+    df.to_csv(path, index=index)
+
+
+# ------- EXTRACTION ------- #
 
 
 def traverse(path, regex, callback):
