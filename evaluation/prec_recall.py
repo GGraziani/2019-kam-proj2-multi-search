@@ -11,6 +11,9 @@ def prec_recall(data, gt):
 
     search_engine = SearchEngine(data)
     evaluator = Evaluator(search_engine, gt)
+    prec, avg_prec_recall = evaluator.evaluate()
+    print(prec)
+    print(avg_prec_recall)
 
 
 def prec_recall_argparse(args):
