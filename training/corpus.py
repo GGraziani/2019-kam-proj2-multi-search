@@ -1,5 +1,9 @@
 import gensim
+import pandas as pd
 from gensim import corpora, similarities, models
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from utils.misc import get_not_unique_words, w_2_tagged_doc, split_name, get_top_five
 
@@ -7,11 +11,11 @@ from utils.misc import get_not_unique_words, w_2_tagged_doc, split_name, get_top
 class Corpus:
     def __init__(self, df):
         self._df = df
-        self.words = self._process_names(self._df)
+        self.words = self._process_names()
 
         self._train()
 
-    def _process_names(self, df):
+    def _process_names(self):
         print('\t- Processing filenames... ', end='')
 
         all_names = self._df[self._df.columns[0]]
@@ -59,6 +63,7 @@ class Corpus:
         tf_idf_corpus = tf_idf_model[bow_list]
 
         self._lsi_model = models.LsiModel(tf_idf_corpus, id2word=self._lsi_dict, num_topics=200)
+        self._lsi_corpus = self._lsi_model[tf_idf_corpus]
         self._lsi_index = similarities.MatrixSimilarity(self._lsi_model[bow_list])
         print(' done.')
 
@@ -90,13 +95,21 @@ class Corpus:
 
         return get_top_five(self._df, similarity)
 
-    def lsi_visualization(self, words):
-        top5 = self.lsi(words)
+    def lsi_viz(self, words):
         bow = self._lsi_dict.doc2bow(words)
+        vector = self._lsi_model[bow]
+        similarity = abs(self._lsi_index[vector])
 
-        top5.append(self._lsi_model[bow])
+        c = 0
+        ret = [self._lsi_model[bow]]
+        for doc_number, score in sorted(enumerate(similarity), key=lambda x: x[1], reverse=True):
+            if c >= 5:
+                break
+            else:
+                ret.append(self._lsi_corpus[doc_number])
+                c += 1
 
-        return top5
+        return ret
 
     def doc2v(self, words):
         vector = self._d2v_model.infer_vector(words)
@@ -107,7 +120,7 @@ class Corpus:
             top_five.append(self._df.iloc[top_most_similar[index][0]].values.tolist())
         return top_five
 
-    def doc2v_visualization(self, words):
+    def doc2v_viz(self, words):
         vector = self._d2v_model.infer_vector(words)
         top_most_similar = [doc for doc in self._d2v_model.docvecs.most_similar([vector], topn=5)]
 

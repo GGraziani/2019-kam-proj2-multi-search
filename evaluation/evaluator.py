@@ -41,9 +41,42 @@ class Evaluator(object):
 
         final_result = {}
 
+        lsi_vs = []
+        lsi_hues = []
+        lsi_sizes = []
+
+        d2v_vs = []
+        d2v_hues = []
+        d2v_sizes = []
+
         for q in range(len(self._ground_truth)):
             query = self._ground_truth[q]
             search_results = self._search_engine.query(query[0])
+
+            # ----- Create Visualization (START)----- #
+            words = query[0].lower().split()
+            lsi_viz = self._search_engine.corpus.lsi_viz(words)
+            d2v_viz = self._search_engine.corpus.doc2v_viz(words)
+
+            for v in lsi_viz:
+                vv = []
+                for tup in v:
+                    vv.append(tup[1])
+                lsi_vs.append(vv)
+
+            for v in d2v_viz:
+                print(v)
+                d2v_vs.append(v)
+
+            sizes = ['query']
+            sizes.extend(['hit'] * 5)
+
+            lsi_hues.extend([query[1]] * 6)
+            lsi_sizes.extend(sizes)
+
+            d2v_hues.extend([query[1]] * 6)
+            d2v_sizes.extend(sizes)
+            # ----- Create Visualization (END)----- #
 
             final_result[q] = {}
 
