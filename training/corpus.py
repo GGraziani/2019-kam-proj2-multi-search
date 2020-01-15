@@ -4,42 +4,6 @@ from gensim import corpora, similarities, models
 from utils.misc import get_not_unique_words, w_2_tagged_doc, split_name, get_top_five
 
 
-class SearchEngine:
-    def __init__(self, data):
-        print('\n> Initializing the search engine... ')
-        self.corpus = Corpus(df=data)
-        self.query_results = {}
-
-    def query(self, query):
-        print('\n> Query: "%s"... ' % query)
-        words = query.lower().split()
-
-        self.query_results['freq'] = self.corpus.freq(words)
-        self.query_results['tf-idf'] = self.corpus.tf_idf(words)
-        self.query_results['lsi'] = self.corpus.lsi(words)
-        self.query_results['doc2v'] = self.corpus.doc2v(words)
-
-        self.print_query_results()
-
-        return self.query_results
-
-    def print_query_results(self):
-        if len(self.query_results) > 0:
-
-            print('\t 1. Freq results...')
-            for res in self.query_results['freq']:
-                print('\t\t', res)
-            print('\t 2. Tf-idf results...')
-            for res in self.query_results['tf-idf']:
-                print('\t\t', res)
-            print('\t 3. LSI results...')
-            for res in self.query_results['lsi']:
-                print('\t\t', res)
-            print('\t 4. Doc2V results...')
-            for res in self.query_results['doc2v']:
-                print('\t\t', res)
-
-
 class Corpus:
     def __init__(self, df):
         self._df = df
@@ -126,6 +90,14 @@ class Corpus:
 
         return get_top_five(self._df, similarity)
 
+    def lsi_visualization(self, words):
+        top5 = self.lsi(words)
+        bow = self._lsi_dict.doc2bow(words)
+
+        top5.append(self._lsi_model[bow])
+
+        return top5
+
     def doc2v(self, words):
         vector = self._d2v_model.infer_vector(words)
         top_most_similar = self._d2v_model.docvecs.most_similar([vector], topn=5)
@@ -134,4 +106,15 @@ class Corpus:
         for label, index in [('FIRST', 0), ('SECOND', 1), ('THIRD', 2), ('FOURTH', 3), ('FIFTH', 4)]:
             top_five.append(self._df.iloc[top_most_similar[index][0]].values.tolist())
         return top_five
+
+    def doc2v_visualization(self, words):
+        vector = self._d2v_model.infer_vector(words)
+        top_most_similar = [doc for doc in self._d2v_model.docvecs.most_similar([vector], topn=5)]
+
+        doc2vec_list = [self._d2v_model.infer_vector(words)]
+        for hit_idx, sim in top_most_similar:
+            doc_words = self.words[hit_idx]
+            doc2vec_list.append(self._d2v_model.infer_vector(doc_words))
+
+        return doc2vec_list
 

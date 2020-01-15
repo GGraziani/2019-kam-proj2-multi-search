@@ -5,7 +5,7 @@ import pandas as pd
 
 from definitions import EVALUATION_PATH, PROJ_ROOT
 from evaluation.evaluator import Evaluator
-from training.search_engine import SearchEngine
+from search_engine.search_engine import SearchEngine
 from utils.misc import save_to_csv, mkdir
 
 

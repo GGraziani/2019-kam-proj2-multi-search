@@ -3,7 +3,7 @@ import sys
 
 import pandas as pd
 
-from training.search_engine import SearchEngine
+from search_engine.search_engine import SearchEngine
 
 
 def search_data(data, query):
