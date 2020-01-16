@@ -7,4 +7,5 @@ TENSORFLOW_PATH = os.path.join(PROJ_ROOT, 'lib/tensorflow')
 EXTRACTED_DATA_PATH = os.path.join(PROJ_ROOT, 'res/data.csv')
 GROUND_TRUTH_PATH = os.path.join(PROJ_ROOT, 'res/ground-truth.txt')
 EVALUATION_PATH = os.path.join(PROJ_ROOT, 'res/evaluation')
+VISUALIZATION_PATH = os.path.join(PROJ_ROOT, 'res/viz')
 
