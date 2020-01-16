@@ -1,6 +1,5 @@
 import os
 import sys
-
 import pandas as pd
 
 from definitions import EVALUATION_PATH, PROJ_ROOT
@@ -20,9 +19,6 @@ def prec_recall(data, gt):
     save_to_csv(prec, os.path.join(EVALUATION_PATH, 'precision.csv'))
     save_to_csv(avg_prec_recall, os.path.join(EVALUATION_PATH, 'avg_prec_recall.csv'), index=True)
     print('\n Results of evaluation saved to directory "%s"' % os.path.relpath(EVALUATION_PATH, PROJ_ROOT))
-
-    # print(prec)
-    # print(avg_prec_recall)
 
 
 def prec_recall_argparse(args):

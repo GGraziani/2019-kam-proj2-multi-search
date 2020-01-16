@@ -1,9 +1,5 @@
 import gensim
-import pandas as pd
 from gensim import corpora, similarities, models
-from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 from utils.misc import get_not_unique_words, w_2_tagged_doc, split_name, get_top_five
 

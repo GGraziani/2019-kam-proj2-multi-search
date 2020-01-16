@@ -4,10 +4,12 @@ from collections import defaultdict
 from re import finditer
 
 import gensim
+import pandas as pd
+import seaborn as sns
 from gensim import models
 from gensim.parsing.preprocessing import STOPWORDS
-
-from definitions import EXTRACTED_DATA_PATH
+from matplotlib import pyplot
+from sklearn.manifold import TSNE
 
 
 def indent(text, spaces=4):
@@ -89,3 +91,32 @@ def get_top_five(df, similarity):
             top_five.append(df.iloc[doc_number].values.tolist())
             c += 1
     return top_five
+
+
+# ------- VISUALIZATION ------- #
+
+
+def save_plot(img_name, vectors, hues, sizes):
+    td_sne = TSNE(n_components=2, verbose=0, perplexity=2, n_iter=3000)
+    e_space = td_sne.fit_transform(vectors)
+    df_subset = pd.DataFrame()
+    df_subset['x'] = e_space[:, 0]
+    df_subset['y'] = e_space[:, 1]
+
+    pyplot.figure(figsize=(9, 9), dpi=300)
+    sns.scatterplot(
+        x="x", y="y",
+        hue=hues,
+        size=sizes,
+        data=df_subset,
+        legend="full",
+        alpha=1.0
+    )
+    for idx, xy in enumerate(zip(e_space[:, 0], e_space[:, 1])):
+        if idx % 6 != 0:
+            continue
+        pyplot.annotate(hues[idx], xy=xy, xytext=(-2, 2),
+                        textcoords='offset points', ha='right', va='bottom',
+                        fontsize=5)
+
+    pyplot.savefig(img_name + ".png")

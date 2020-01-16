@@ -1,7 +1,8 @@
 import os
 import pandas as pd
 
-from definitions import LIB_PATH
+from definitions import LIB_PATH, VISUALIZATION_PATH, PROJ_ROOT
+from utils.misc import save_plot, mkdir
 
 
 class Evaluator(object):
@@ -65,7 +66,6 @@ class Evaluator(object):
                 lsi_vs.append(vv)
 
             for v in d2v_viz:
-                print(v)
                 d2v_vs.append(v)
 
             sizes = ['query']
@@ -93,5 +93,11 @@ class Evaluator(object):
                     if file[0] == query[1] and file[1] == path:
                         final_result[q][algo]['precision'] = 1 / (f+1)
                         break
+
+        mkdir(VISUALIZATION_PATH)
+        save_plot(os.path.join(VISUALIZATION_PATH, 'LSI'), lsi_vs, lsi_hues, lsi_sizes)
+        save_plot(os.path.join(VISUALIZATION_PATH, 'Doc2v'), d2v_vs, d2v_hues, d2v_sizes)
+        print('\n Visualization images for FREQ and Doc2v are saved at "%s"' %
+              os.path.relpath(VISUALIZATION_PATH, PROJ_ROOT))
 
         return final_result
