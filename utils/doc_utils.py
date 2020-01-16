@@ -19,10 +19,10 @@ extract_data:
      Extract names of Python and C++ classes, methods, functions.
 
     Example usage:
-        $ python3 multi_search.py extract_data --source lib/tensorflow
+        $ python3 multi_search.py extract_data --path lib/tensorflow
 
     flags:
-    -s <path-to-source> | --source <path-to-source>:
+    -p <path-to-source> | --path <path-to-source>:
         The path to the source code to analyse. Default is "PROJ_ROOT/lib/tensorflow".
 ''',
     'search_data': '''
@@ -31,7 +31,7 @@ search_data:
       and report the entities most similar to the given query string.
 
     Example usage:
-        $ python3 multi_search.py search_data --data res/data.csv
+        $ python3 multi_search.py search_data --data res/data.csv --query "Optimizer that implements the Adadelta algorithm"
 
     flags:
     -d <path-to-data> | --data <path-to-data>:
